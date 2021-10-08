@@ -22,11 +22,6 @@ io.on("connection", socket => {
         })
     });
 
-
-    // handle the event sent with socket.emit()
-    // socket.on("salutations", (elem1, elem2, elem3) => {
-    //     console.log(elem1, elem2, elem3);
-    // });
 });
 
 
@@ -37,9 +32,9 @@ let fetchGasData = () => {
             data.suggest = res.data.estimatedPrices[0].price
             data.low = res.data.estimatedPrices[4].price
             data.safe = res.data.baseFeePerGas.toFixed(1)
-            // console.log(JSON.stringify(data))
             await redis.set('gasprice', JSON.stringify(data));
             io.emit("gasprice", data)
+            console.log("fetchGasData", data)
         }).catch((error) => {
             console.error(error);
         });
@@ -59,9 +54,9 @@ let fetchCoinPrice = () => {
         for (let item of res.data) {
             data[item["id"]] = item
         }
-        // console.log("fetchCoinPrice", JSON.stringify(data))
         await redis.set('coinprice', JSON.stringify(data));
         io.emit("coinprice", data)
+        console.log("fetchCoinPrice")
     }).catch((error) => {
         console.error(error);
     });
